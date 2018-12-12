@@ -1,0 +1,8 @@
+[package]
+name = "tree-sitter-ast-viewer"
+version = "0.1.0"
+authors = ["Alberto Fanjul <albertofanjul@gmail.com>"]
+
+[dependencies]
+tree-sitter = { git = "https://github.com/albfan/rust-tree-sitter", branch = "parsers" }
+
