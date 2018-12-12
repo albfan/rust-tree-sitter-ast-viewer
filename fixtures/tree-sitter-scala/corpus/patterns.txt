@@ -1,0 +1,114 @@
+=========================
+Alternative patterns
+=========================
+
+val x = y match {
+  case 1 | a => b
+  case "c" | "d" | "e" => f
+}
+
+---
+
+(compilation_unit
+  (val_definition
+    (identifier)
+    (match_expression (identifier) (case_block
+      (case_clause
+        (alternative_pattern (number) (identifier))
+        (identifier))
+      (case_clause
+        (alternative_pattern
+          (alternative_pattern (string) (string))
+          (string))
+        (identifier))))))
+
+=========================
+Typed patterns
+=========================
+
+val x = y match {
+  case 1 : Int => 2
+  case a : B with C => d
+}
+
+---
+
+(compilation_unit
+  (val_definition
+    (identifier)
+    (match_expression (identifier) (case_block
+      (case_clause
+        (typed_pattern (number) (type_identifier)) (number))
+      (case_clause
+        (typed_pattern (identifier) (compound_type (type_identifier) (type_identifier)))
+        (identifier))))))
+
+============================
+Tuple patterns
+============================
+
+val (a, b) = if (c) (d, e) else (f, g)
+
+---
+
+(compilation_unit
+  (val_definition
+    (tuple_pattern (identifier) (identifier))
+    (if_expression
+      (parenthesized_expression (identifier))
+      (tuple_expression (identifier) (identifier))
+      (tuple_expression (identifier) (identifier)))))
+
+============================
+Case class patterns
+============================
+
+def showNotification(notification: Notification): String = {
+  notification match {
+    case Email(email, title, _) =>
+      s"You got an email from $email with title: $title"
+    case SMS(number, message) =>
+      s"You got an SMS from $number! Message: $message"
+    case VoiceRecording(name, link) =>
+      s"you received a Voice Recording from $name! Click the link to hear it: $link"
+  }
+}
+
+---
+
+(compilation_unit
+  (function_definition
+    (identifier)
+    (parameters (parameter (identifier) (type_identifier)))
+    (type_identifier)
+    (block
+      (match_expression (identifier) (case_block
+        (case_clause
+          (case_class_pattern (type_identifier) (identifier) (identifier) (wildcard))
+          (string_transform_expression (identifier) (string (interpolation (identifier)) (interpolation (identifier)))))
+        (case_clause
+          (case_class_pattern (type_identifier) (identifier) (identifier))
+          (string_transform_expression (identifier) (string (interpolation (identifier)) (interpolation (identifier)))))
+        (case_clause
+          (case_class_pattern (type_identifier) (identifier) (identifier))
+          (string_transform_expression (identifier) (string (interpolation (identifier)) (interpolation (identifier))))))))))
+
+============================
+Capture patterns
+============================
+
+val x = y match {
+  case a @ B(1) => c
+}
+
+---
+
+(compilation_unit
+  (val_definition
+    (identifier)
+    (match_expression
+      (identifier)
+      (case_block
+        (case_clause
+          (capture_pattern (identifier) (case_class_pattern (type_identifier) (number)))
+          (identifier)))))) 

@@ -1,0 +1,28 @@
+sudo: false
+dist: trusty
+language: cpp
+compiler:
+- gcc
+
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    packages:
+    - g++-5
+    - clang
+
+install:
+- export CXX="g++-5"
+- scan-build script/configure
+
+script:
+- script/ci
+
+cache:
+  directories:
+  - test/fixtures/grammars
+
+branches:
+  only:
+  - master

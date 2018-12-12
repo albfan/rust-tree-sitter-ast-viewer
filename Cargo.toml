@@ -2,7 +2,10 @@
 name = "tree-sitter-ast-viewer"
 version = "0.1.0"
 authors = ["Alberto Fanjul <albertofanjul@gmail.com>"]
+build = "build.rs"
 
 [dependencies]
-tree-sitter = { git = "https://github.com/albfan/rust-tree-sitter", branch = "parsers" }
+tree-sitter = { git = "https://github.com/tree-sitter/rust-tree-sitter" }
 
+[build-dependencies]
+cc = "1.0"

@@ -1,0 +1,24 @@
+{
+  "name": "tree-sitter-rust",
+  "version": "0.13.5",
+  "description": "Rust grammar for tree-sitter",
+  "main": "index.js",
+  "keywords": [
+    "parser",
+    "rust"
+  ],
+  "author": "Maxim Sokolov <maxim0xff@gmail.com> (https://github.com/MaximSokolov)",
+  "license": "MIT",
+  "dependencies": {
+    "nan": "^2.8.0"
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.13.5",
+    "eslint": "^3.19.0"
+  },
+  "scripts": {
+    "build": "tree-sitter generate && node-gyp build",
+    "test": "eslint ./grammar.js && tree-sitter test && script/parse-examples",
+    "test-windows": "eslint ./grammar.js && tree-sitter test"
+  }
+}

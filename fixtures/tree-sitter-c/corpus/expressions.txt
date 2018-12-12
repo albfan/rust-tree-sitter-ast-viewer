@@ -1,0 +1,394 @@
+============================================
+Number literals
+============================================
+
+int a = 0xAC00;
+int b = 0.123;
+int c = 0b1010001;
+int d = 0xabc00ull;
+
+---
+
+(translation_unit
+  (declaration (primitive_type) (init_declarator (identifier) (number_literal)))
+  (declaration (primitive_type) (init_declarator (identifier) (number_literal)))
+  (declaration (primitive_type) (init_declarator (identifier) (number_literal)))
+  (declaration (primitive_type) (init_declarator (identifier) (number_literal))))
+
+============================================
+Identifiers
+============================================
+
+int main() {
+  _abc;
+  d_EG123;
+}
+
+---
+
+(translation_unit
+  (function_definition
+    (primitive_type)
+    (function_declarator (identifier) (parameter_list))
+    (compound_statement
+      (expression_statement (identifier))
+      (expression_statement (identifier)))))
+
+============================================
+Common constants
+============================================
+
+int main() {
+  true;
+  false;
+  NULL;
+
+  // regression test - identifiers starting w/ these strings should tokenize correctly.
+  true_value;
+  false_value;
+  NULL_value;
+}
+
+---
+
+(translation_unit
+  (function_definition
+    (primitive_type)
+    (function_declarator (identifier) (parameter_list))
+    (compound_statement
+      (expression_statement (true))
+      (expression_statement (false))
+      (expression_statement (null))
+      (comment)
+      (expression_statement (identifier))
+      (expression_statement (identifier))
+      (expression_statement (identifier)))))
+
+============================================
+Function calls
+============================================
+
+int main() {
+  printf("hi! %d\n", x);
+}
+
+---
+
+(translation_unit
+  (function_definition
+    (primitive_type)
+    (function_declarator (identifier) (parameter_list))
+    (compound_statement
+      (expression_statement (call_expression
+        (identifier)
+        (argument_list (string_literal (escape_sequence)) (identifier)))))))
+
+============================================
+String literals
+============================================
+
+int main() {
+  "a";
+  "b" "c" "d";
+  "\"hi\"";
+}
+
+---
+
+(translation_unit
+  (function_definition
+    (primitive_type)
+    (function_declarator (identifier) (parameter_list))
+    (compound_statement
+      (expression_statement (string_literal))
+      (expression_statement (concatenated_string (string_literal) (string_literal) (string_literal)))
+      (expression_statement (string_literal (escape_sequence) (escape_sequence))))))
+
+============================================
+Character literals
+============================================
+
+int main() {
+  'a';
+  '\0';
+  '\t';
+  '\'';
+}
+
+---
+
+(translation_unit
+  (function_definition
+    (primitive_type)
+    (function_declarator (identifier) (parameter_list))
+    (compound_statement
+      (expression_statement (char_literal))
+      (expression_statement (char_literal (escape_sequence)))
+      (expression_statement (char_literal (escape_sequence)))
+      (expression_statement (char_literal (escape_sequence))))))
+
+============================================
+Field access
+============================================
+
+int main() {
+  s.data1;
+  p->data2;
+  q[data3];
+}
+
+---
+
+(translation_unit
+  (function_definition
+    (primitive_type)
+    (function_declarator (identifier) (parameter_list))
+    (compound_statement
+      (expression_statement (field_expression (identifier) (field_identifier)))
+      (expression_statement (field_expression (identifier) (field_identifier)))
+      (expression_statement (subscript_expression (identifier) (identifier))))))
+
+============================================
+Boolean operators
+============================================
+
+int main() {
+  !x || !y && !z;
+}
+
+---
+
+(translation_unit
+  (function_definition
+    (primitive_type)
+    (function_declarator (identifier) (parameter_list))
+    (compound_statement
+      (expression_statement (logical_expression
+        (logical_expression (identifier))
+        (logical_expression
+          (logical_expression (identifier))
+          (logical_expression (identifier))))))))
+
+============================================
+Math operators
+============================================
+
+int main() {
+  -a / b + c * -d;
+  a++ - ++b + c-- + --d;
+  }
+
+---
+
+(translation_unit
+  (function_definition
+    (primitive_type)
+    (function_declarator (identifier) (parameter_list))
+    (compound_statement
+      (expression_statement (math_expression
+        (math_expression
+          (math_expression (identifier))
+          (identifier))
+        (math_expression
+          (identifier)
+          (math_expression (identifier)))))
+      (expression_statement
+        (math_expression
+          (math_expression
+            (math_expression
+              (math_expression (identifier))
+              (math_expression (identifier)))
+            (math_expression (identifier)))
+          (math_expression (identifier)))))))
+
+============================================
+The comma operator
+============================================
+
+int main() {
+  i--, j--;
+  (i--, j--);
+}
+
+---
+
+(translation_unit
+  (function_definition
+    (primitive_type)
+    (function_declarator (identifier) (parameter_list))
+    (compound_statement
+      (expression_statement
+        (comma_expression
+          (math_expression (identifier))
+          (math_expression (identifier))))
+      (expression_statement
+        (parenthesized_expression
+          (comma_expression
+            (math_expression (identifier))
+            (math_expression (identifier))))))))
+
+============================================
+Assignments
+============================================
+
+int main() {
+  static int a = 1;
+  b = *c = 2;
+  d.e = 3;
+  f->g = 4;
+  h[i] = j;
+  k += l;
+  m -= o;
+  n *= p;
+  q /= r;
+}
+
+---
+
+(translation_unit
+  (function_definition
+    (primitive_type)
+    (function_declarator (identifier) (parameter_list))
+    (compound_statement
+      (declaration (storage_class_specifier) (primitive_type) (init_declarator (identifier) (number_literal)))
+      (expression_statement (assignment_expression (identifier) (assignment_expression (pointer_expression (identifier)) (number_literal))))
+      (expression_statement (assignment_expression (field_expression (identifier) (field_identifier)) (number_literal)))
+      (expression_statement (assignment_expression (field_expression (identifier) (field_identifier)) (number_literal)))
+      (expression_statement (assignment_expression (subscript_expression (identifier) (identifier)) (identifier)))
+      (expression_statement (assignment_expression (identifier) (identifier)))
+      (expression_statement (assignment_expression (identifier) (identifier)))
+      (expression_statement (assignment_expression (identifier) (identifier)))
+      (expression_statement (assignment_expression (identifier) (identifier))))))
+
+============================================
+Pointer operations
+============================================
+
+int main() {
+  doSomething(&x, *x);
+}
+
+---
+
+(translation_unit
+  (function_definition
+    (primitive_type)
+    (function_declarator (identifier) (parameter_list))
+    (compound_statement
+      (expression_statement (call_expression
+        (identifier)
+        (argument_list
+          (pointer_expression (identifier))
+          (pointer_expression (identifier))))))))
+
+============================================
+Type-casts
+============================================
+
+int main() {
+  x = (const SomeType *)thing;
+}
+
+---
+
+(translation_unit
+  (function_definition
+    (primitive_type)
+    (function_declarator (identifier) (parameter_list))
+    (compound_statement
+      (expression_statement (assignment_expression
+        (identifier)
+        (cast_expression
+          (type_descriptor (type_qualifier) (type_identifier) (abstract_pointer_declarator))
+          (identifier)))))))
+
+============================================
+Sizeof expressions
+============================================
+
+int main() {
+  sizeof x.a;
+  sizeof(x.a);
+  sizeof(const char **);
+  sizeof(char * ());
+}
+
+---
+
+(translation_unit
+  (function_definition
+    (primitive_type)
+    (function_declarator (identifier) (parameter_list))
+    (compound_statement
+      (expression_statement (sizeof_expression (field_expression (identifier) (field_identifier))))
+      (expression_statement (sizeof_expression (parenthesized_expression (field_expression (identifier) (field_identifier)))))
+      (expression_statement (sizeof_expression
+        (type_descriptor (type_qualifier) (primitive_type) (abstract_pointer_declarator (abstract_pointer_declarator)))))
+      (expression_statement (sizeof_expression
+        (type_descriptor (primitive_type) (abstract_pointer_declarator (abstract_function_declarator (parameter_list)))))))))
+
+============================================
+Compound literals
+============================================
+
+int main() {
+  x = (SomeType) {
+    .f1.f2[f3] = 5,
+    .f4 = {}
+  };
+  y = (struct SomeStruct) {
+    7,
+    8
+  };
+}
+
+---
+
+(translation_unit
+  (function_definition
+    (primitive_type)
+    (function_declarator (identifier) (parameter_list))
+    (compound_statement
+      (expression_statement (assignment_expression
+        (identifier)
+        (compound_literal_expression
+          (type_descriptor (type_identifier))
+          (initializer_list
+            (initializer_pair
+              (field_designator (field_identifier))
+              (field_designator (field_identifier))
+              (subscript_designator (identifier))
+              (number_literal))
+            (initializer_pair
+              (field_designator (field_identifier))
+              (initializer_list))))))
+      (expression_statement (assignment_expression
+        (identifier)
+        (compound_literal_expression
+          (type_descriptor (struct_specifier (type_identifier)))
+          (initializer_list
+            (number_literal)
+            (number_literal))))))))
+
+============================================
+Compound literals with trailing commas
+============================================
+
+int main() {
+  y = (struct SomeStruct) { 7, 8, };
+}
+
+---
+
+(translation_unit
+  (function_definition
+    (primitive_type)
+    (function_declarator (identifier) (parameter_list))
+    (compound_statement
+    (expression_statement (assignment_expression
+      (identifier)
+      (compound_literal_expression
+        (type_descriptor (struct_specifier (type_identifier)))
+        (initializer_list
+          (number_literal)
+          (number_literal))))))))

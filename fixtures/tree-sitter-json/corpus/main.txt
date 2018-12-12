@@ -1,0 +1,76 @@
+===================
+arrays
+===================
+
+[
+  345,
+  10.1,
+  10,
+  -10,
+  null,
+  true,
+  false,
+  { "stuff": "good" }
+]
+
+---
+
+(value (array
+  (number)
+  (number)
+  (number)
+  (number)
+  (null)
+  (true)
+  (false)
+  (object (pair (string) (string)))))
+
+===================
+long objects
+===================
+
+{
+  "key1": "value1",
+  "key2": 1
+}
+
+---
+
+(value (object
+  (pair (string) (string))
+  (pair (string) (number))))
+
+=====================
+Escape sequences
+=====================
+
+{
+  "key1": "value\n",
+  "key2": "value\t"
+}
+
+----
+
+(value (object
+  (pair (string) (string (escape_sequence)))
+  (pair (string) (string (escape_sequence)))))
+
+================================
+Top-level numbers
+================================
+
+-1
+
+---
+
+(value (number))
+
+================================
+Top-level null
+================================
+
+null
+
+---
+
+(value (null))

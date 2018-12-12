@@ -1,0 +1,26 @@
+{
+  "name": "tree-sitter-javascript",
+  "version": "0.13.9",
+  "description": "Javascript grammar for node-tree-sitter",
+  "main": "index.js",
+  "keywords": [
+    "parser",
+    "lexer"
+  ],
+  "author": "Max Brunsfeld",
+  "license": "MIT",
+  "dependencies": {
+    "nan": "^2.4.0"
+  },
+  "devDependencies": {
+    "acorn": "^2.6.4",
+    "babylon": "^6.3.26",
+    "esprima": "^2.7.1",
+    "tree-sitter-cli": "^0.13.5"
+  },
+  "scripts": {
+    "build": "tree-sitter generate && node-gyp build",
+    "test": "tree-sitter test && script/parse-examples",
+    "test-windows": "tree-sitter test && tree-sitter parse examples --quiet --time"
+  }
+}

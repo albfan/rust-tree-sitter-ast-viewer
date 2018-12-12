@@ -1,0 +1,33 @@
+[submodule "vendor/tree-sitter"]
+	path = vendor/tree-sitter
+	url = https://github.com/tree-sitter/tree-sitter
+[submodule "fixtures/tree-sitter-javascript"]
+	path = fixtures/tree-sitter-javascript
+	url = https://github.com/tree-sitter/tree-sitter-javascript
+[submodule "fixtures/tree-sitter-json"]
+	path = fixtures/tree-sitter-json
+	url = https://github.com/tree-sitter/tree-sitter-json
+[submodule "fixtures/tree-sitter-c"]
+	path = fixtures/tree-sitter-c
+	url = https://github.com/tree-sitter/tree-sitter-c
+[submodule "fixtures/tree-sitter-go"]
+	path = fixtures/tree-sitter-go
+	url = https://github.com/tree-sitter/tree-sitter-go
+[submodule "fixtures/tree-sitter-typescript"]
+	path = fixtures/tree-sitter-typescript
+	url = https://github.com/tree-sitter/tree-sitter-typescript
+[submodule "fixtures/tree-sitter-rust"]
+	path = fixtures/tree-sitter-rust
+	url = https://github.com/tree-sitter/tree-sitter-rust
+[submodule "fixtures/tree-sitter-scala"]
+	path = fixtures/tree-sitter-scala
+	url = https://github.com/tree-sitter/tree-sitter-scala
+[submodule "fixtures/tree-sitter-css"]
+	path = fixtures/tree-sitter-css
+	url = https://github.com/tree-sitter/tree-sitter-css
+[submodule "fixtures/tree-sitter-java"]
+	path = fixtures/tree-sitter-java
+	url = https://github.com/tree-sitter/tree-sitter-java
+[submodule "fixtures/tree-sitter"]
+	path = fixtures/tree-sitter
+	url = https://github.com/tree-sitter/tree-sitter

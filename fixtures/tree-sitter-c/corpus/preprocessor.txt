@@ -1,0 +1,199 @@
+============================================
+Include directives
+============================================
+
+#include "some/path.h"
+#include <stdint.h>
+
+---
+
+(translation_unit
+  (preproc_include (string_literal))
+  (preproc_include (system_lib_string)))
+
+============================================
+Object-like macro definitions
+============================================
+
+#define ONE
+#define TWO int a = b;
+#define THREE \
+  c == d ? \
+  e : \
+  f
+#define FOUR (mno * pq)
+
+---
+
+(translation_unit
+  (preproc_def (identifier))
+  (preproc_def (identifier) (preproc_arg))
+  (preproc_def (identifier) (preproc_arg))
+  (preproc_def (identifier) (preproc_arg)))
+
+============================================
+Function-like macro definitions
+============================================
+
+#define ONE() a
+#define TWO(b) c
+#define THREE(d, e) f
+#define FOUR(...) g
+#define FIVE(h, i, ...) j
+
+---
+
+(translation_unit
+  (preproc_function_def (identifier) (preproc_params) (preproc_arg))
+  (preproc_function_def (identifier) (preproc_params (identifier)) (preproc_arg))
+  (preproc_function_def (identifier) (preproc_params (identifier) (identifier)) (preproc_arg))
+  (preproc_function_def (identifier) (preproc_params) (preproc_arg))
+  (preproc_function_def (identifier) (preproc_params (identifier) (identifier)) (preproc_arg)))
+
+============================================
+Ifdefs
+============================================
+
+#ifndef DEFINE1
+int j;
+#endif
+
+#ifdef DEFINE2
+ssize_t b;
+#define c 32
+#elif defined DEFINE3
+#else
+int b;
+#define c 16
+#endif
+
+#ifdef DEFINE2
+#else
+#  ifdef DEFINE3
+#  else
+#  endif
+#endif
+
+---
+
+(translation_unit
+  (preproc_ifdef
+    (identifier)
+    (declaration (primitive_type) (identifier)))
+
+  (preproc_ifdef
+    (identifier)
+    (declaration (primitive_type) (identifier))
+    (preproc_def (identifier) (preproc_arg))
+    (preproc_elif
+      (preproc_arg)
+      (preproc_else
+        (declaration (primitive_type) (identifier))
+        (preproc_def (identifier) (preproc_arg)))))
+
+  (preproc_ifdef
+    (identifier)
+    (preproc_else
+      (preproc_ifdef
+        (identifier)
+        (preproc_else)))))
+
+===============================================================
+General if blocks
+==========================================
+
+#if defined(__GNUC__) && defined(__PIC__)
+#define inline inline __attribute__((always_inline))
+#elif defined(_WIN32)
+#define something
+#elif !defined(SOMETHING_ELSE)
+#define SOMETHING_ELSE
+#else
+#include <something>
+#endif
+
+---
+
+(translation_unit
+  (preproc_if (preproc_arg)
+    (preproc_def (identifier) (preproc_arg))
+    (preproc_elif (preproc_arg)
+      (preproc_def (identifier))
+      (preproc_elif (preproc_arg)
+        (preproc_def (identifier))
+        (preproc_else
+          (preproc_include (system_lib_string)))))))
+
+============================================
+Preprocessor conditionals in functions
+============================================
+
+int main() {
+  #if d
+    puts("1");
+  #else
+    puts("2");
+  #endif
+
+  #if a
+    return 0;
+  #elif b
+    return 1;
+  #elif c
+    return 2;
+  #else
+    return 3;
+  #endif
+}
+
+---
+
+(translation_unit
+  (function_definition
+    (primitive_type)
+    (function_declarator (identifier) (parameter_list))
+    (compound_statement
+      (preproc_if
+        (preproc_arg)
+        (expression_statement (call_expression (identifier) (argument_list (string_literal))))
+        (preproc_else
+          (expression_statement (call_expression (identifier) (argument_list (string_literal))))))
+      (preproc_if (preproc_arg)
+        (return_statement (number_literal))
+        (preproc_elif (preproc_arg)
+          (return_statement (number_literal))
+          (preproc_elif (preproc_arg)
+            (return_statement (number_literal))
+            (preproc_else
+              (return_statement (number_literal)))))))))
+
+=================================================
+Preprocessor conditionals in struct/union bodies
+=================================================
+
+struct S {
+#ifdef _WIN32
+  LONG f2;
+#else
+  uint32_t f2;
+#endif
+};
+
+---
+
+(translation_unit
+  (struct_specifier (type_identifier) (field_declaration_list
+    (preproc_ifdef (identifier)
+      (field_declaration (type_identifier) (field_identifier))
+      (preproc_else
+        (field_declaration (primitive_type) (field_identifier)))))))
+
+====================================
+Unknown preprocessor directives
+====================================
+
+#pragma mark - UIViewController
+
+---
+
+(translation_unit (preproc_call (preproc_directive) (preproc_arg)))
